@@ -25,28 +25,23 @@ public class ChromeGoogleTest {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
 
         driver.get("https://www.google.com");
-
         driver.context("NATIVE_APP");
 
+        /* Remove the terms and conditions pop up */
         wait.until(ExpectedConditions.presenceOfElementLocated(By
-                .xpath("//android.widget.Button[@text='Leer más']")));
-        driver.findElement(By.xpath("//android.widget.Button[@text='Leer más']"))
-                .click();
-
+                .xpath("//android.widget.Button[@text='Leer más']"))).click();
         wait.until(ExpectedConditions.presenceOfElementLocated(By
-                .xpath("//android.widget.Button[@text=\"Aceptar todo\"]")));
-        driver.findElement(By.xpath("//android.widget.Button[@text=\"Aceptar todo\"]")).click();
+                .xpath("//android.widget.Button[@text=\"Aceptar todo\"]"))).click();
 
+        /* Search for Hello, World! */
+        String searchBarXpath = "//android.webkit.WebView[@text=\"Google\"]/android.view.View"
+                + "/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View[1]"
+                + "/android.view.View[1]/android.widget.EditText";
         wait.until(ExpectedConditions.presenceOfElementLocated(By
-                .xpath("//android.webkit.WebView[@text=\"Google\"]/android.view.View"
-                        + "/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View[1]"
-                        + "/android.view.View[1]/android.widget.EditText")));
-        driver.findElement(By.xpath("//android.webkit.WebView[@text=\"Google\"]/android.view.View"
-                        + "/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View[1]"
-                        + "/android.view.View[1]/android.widget.EditText"))
-                .sendKeys("Hello World!");
+                .xpath(searchBarXpath))).sendKeys("Hello, World!");
 
+        assert wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath(searchBarXpath),
+                "Hello, World!")) : "Text not found in search bar!";
         driver.quit();
-        System.out.println("Test passed!");
     }
 }
